@@ -1,0 +1,19 @@
+{
+  "name": "logik",
+  "version": "1.0.0",
+  "description": "Logger",
+  "main": "build/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logger"
+  ],
+  "author": "Alexey Sviridov",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.5.2",
+    "tslint": "^5.11.0",
+    "typescript": "^2.9.2"
+  }
+}
