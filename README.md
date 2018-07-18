@@ -22,7 +22,17 @@ Installing process
 npm install logik
 ```
 ### Running
+```
+const logik = require('logik')(options);
+```
+#options: 
 
+filename (string) - path to the log file 
+level (number) - logging level 
+stdout (boolean) - default false, if true then all info duplicates to console.
+
+
+Example
 ```
 const TRACE = 0,
       DEBUG = 1,
@@ -38,13 +48,11 @@ const logik = require('logik)({
 });
 
 logik.info('MainCls.get params: {1}, fields: {2}', params, fields);
-// 2018-07-18T03:36:06.272Z - INFO: MainCls.get params: {"param1": "val1"}, fields: {"field1": "val1"}
+// 2018-07-18T13:36:06.272Z - INFO: MainCls.get params: {"param1": "val1"}, fields: {"field1": "val1"}
 logik.debug(...);
 logik.info(...);
 logik.warn(...);
 logik.error(...);
-
-
 ```
 
 ## Authors
