@@ -6,13 +6,6 @@ NodeJS module for fast async writing text logs from all workers to the one text 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
 
 ### Installing
 
@@ -25,11 +18,11 @@ npm install logik
 ```
 const logik = require('logik')(options);
 ```
-#### options: 
+#### Options
 
-filename (string) - path to the log file 
-level (number) - logging level 
-stdout (boolean) - default false, if true then all info duplicates to console.
+* filename (string) - path to the log file
+* level (number) - logging level 
+* stdout (boolean) - default false, if true then all info duplicates to console.
 
 
 #### Example
