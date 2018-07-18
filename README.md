@@ -25,14 +25,14 @@ npm install logik
 ```
 const logik = require('logik')(options);
 ```
-#options: 
+#### options: 
 
 filename (string) - path to the log file 
 level (number) - logging level 
 stdout (boolean) - default false, if true then all info duplicates to console.
 
 
-Example
+#### Example
 ```
 const TRACE = 0,
       DEBUG = 1,
