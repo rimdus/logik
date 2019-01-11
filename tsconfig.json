@@ -4,16 +4,15 @@
     "target": "es6",
     "sourceMap": true,
     "inlineSources": true,
-    "outDir": "build/src",
-    "rootDir": "src"
+    "outDir": "./dist",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationDir": "dist/types"
   },
   "exclude": [
     "node_modules"
   ],
-  "files": [
-    "./node_modules/@types/node/index.d.ts"
-  ],
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ]
 }
