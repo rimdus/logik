@@ -187,5 +187,6 @@ function LoggerFactory(options: ILoggerOptions) {
 export {
   LoggerLevel,
   ILoggerOptions,
-  LoggerFactory as Logger,
+  Logger,
+  LoggerFactory as logger,
 };
