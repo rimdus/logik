@@ -1,25 +1,38 @@
+declare enum LoggerLevel {
+    TRACE = 0,
+    DEBUG = 1,
+    INFO = 2,
+    WARN = 3,
+    ERROR = 4,
+    SILENT = 5
+}
 interface Item {
     msg: string;
     level: string;
 }
-declare class Logger {
-    opt: any;
-    stack: Array<Item>;
-    level: number;
+interface ILoggerOptions {
+    level?: number;
+    stdout?: boolean;
     filename: string;
-    state: number;
-    constructor(opt: any);
-    write(text: string): Promise<{}>;
+}
+declare class Logger {
+    private options;
+    private stack;
+    private level;
+    private filename;
+    private state;
+    constructor(options: ILoggerOptions);
+    write(text: string): Promise<any>;
     buildLine(msg: string, level: string, args: any): string;
     addToStack(item: Item): void;
     addLog(msg: string, level: string, args?: any): void;
     init(): void;
     process(): void;
-    trace(msg: any): void;
-    debug(msg: any): void;
-    info(msg: any): void;
-    warn(msg: any): void;
-    error(msg: any): void;
+    trace(msg: string): void;
+    debug(msg: string): void;
+    info(msg: string): void;
+    warn(msg: string): void;
+    error(msg: string): void;
 }
-declare const _default: (opt: any) => Logger;
-export = _default;
+declare function LoggerFactory(options: ILoggerOptions): Logger;
+export { LoggerLevel, ILoggerOptions, LoggerFactory as Logger, };

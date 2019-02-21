@@ -1,18 +1,34 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const cluster = require("cluster");
 const fs = require("fs");
-const TRACE = 0, DEBUG = 1, INFO = 2, WARN = 3, ERROR = 4, SILENT = 5, STATE_IDLE = 0, STATE_PROCESS = 1, STATE_FAIL = 2;
+var LoggerLevel;
+(function (LoggerLevel) {
+    LoggerLevel[LoggerLevel["TRACE"] = 0] = "TRACE";
+    LoggerLevel[LoggerLevel["DEBUG"] = 1] = "DEBUG";
+    LoggerLevel[LoggerLevel["INFO"] = 2] = "INFO";
+    LoggerLevel[LoggerLevel["WARN"] = 3] = "WARN";
+    LoggerLevel[LoggerLevel["ERROR"] = 4] = "ERROR";
+    LoggerLevel[LoggerLevel["SILENT"] = 5] = "SILENT";
+})(LoggerLevel || (LoggerLevel = {}));
+exports.LoggerLevel = LoggerLevel;
+var State;
+(function (State) {
+    State[State["STATE_IDLE"] = 0] = "STATE_IDLE";
+    State[State["STATE_PROCESS"] = 1] = "STATE_PROCESS";
+    State[State["STATE_FAIL"] = 2] = "STATE_FAIL";
+})(State || (State = {}));
 let logger;
 class Logger {
-    constructor(opt) {
-        this.opt = Object.assign({
-            level: INFO,
+    constructor(options) {
+        this.options = Object.assign({
+            level: LoggerLevel.INFO,
             stdout: false
-        }, opt);
+        }, options);
         this.stack = [];
-        this.level = this.opt.level;
-        this.filename = this.opt.filename;
-        this.state = STATE_IDLE;
+        this.level = this.options.level;
+        this.filename = this.options.filename;
+        this.state = State.STATE_IDLE;
         cluster.on('message', (worker, msg, handle) => {
             if (msg && msg.type === 'Logger')
                 this.addToStack(msg);
@@ -21,9 +37,9 @@ class Logger {
     }
     write(text) {
         return new Promise((resolve, reject) => {
-            if (this.opt.stdout)
+            if (this.options.stdout)
                 console.log(text);
-            fs.appendFile(this.opt.filename, text + '\n', (err) => {
+            fs.appendFile(this.options.filename, text + '\n', (err) => {
                 if (err)
                     reject(err);
                 else
@@ -68,20 +84,20 @@ class Logger {
         }
     }
     init() {
-        if (this.state === STATE_IDLE && this.stack.length) {
-            this.state = STATE_PROCESS;
+        if (this.state === State.STATE_IDLE && this.stack.length) {
+            this.state = State.STATE_PROCESS;
             this.process();
         }
-        else if (this.state === STATE_PROCESS && this.stack.length === 0) {
-            this.state = STATE_IDLE;
+        else if (this.state === State.STATE_PROCESS && this.stack.length === 0) {
+            this.state = State.STATE_IDLE;
         }
-        else if (this.state === STATE_FAIL) {
+        else if (this.state === State.STATE_FAIL) {
             if (this.stack.length) {
-                this.state = STATE_PROCESS;
+                this.state = State.STATE_PROCESS;
                 this.process();
             }
             else {
-                this.state = STATE_IDLE;
+                this.state = State.STATE_IDLE;
             }
         }
     }
@@ -96,7 +112,7 @@ class Logger {
                     processNext(); // recursion
                 }).catch((e) => {
                     console.log(e);
-                    self.state = STATE_FAIL;
+                    self.state = State.STATE_FAIL;
                     // delay on the error.
                     setTimeout(() => {
                         self.init();
@@ -104,37 +120,38 @@ class Logger {
                 });
             else {
                 // stop recursion
-                self.state = STATE_IDLE;
+                self.state = State.STATE_IDLE;
             }
         }
     }
     trace(msg) {
-        if (TRACE >= this.level) {
+        if (LoggerLevel.TRACE >= this.level) {
             this.addLog(msg, 'TRACE', arguments);
         }
     }
     debug(msg) {
-        if (DEBUG >= this.level) {
+        if (LoggerLevel.DEBUG >= this.level) {
             this.addLog(msg, 'DEBUG', arguments);
         }
     }
     info(msg) {
-        if (INFO >= this.level) {
+        if (LoggerLevel.INFO >= this.level) {
             this.addLog(msg, 'INFO', arguments);
         }
     }
     warn(msg) {
-        if (WARN >= this.level) {
+        if (LoggerLevel.WARN >= this.level) {
             this.addLog(msg, 'WARN', arguments);
         }
     }
     error(msg) {
-        if (ERROR >= this.level) {
+        if (LoggerLevel.ERROR >= this.level) {
             this.addLog(msg, 'ERROR', arguments);
         }
     }
 }
-module.exports = (opt) => {
-    return logger || (logger = new Logger(opt));
-};
+function LoggerFactory(options) {
+    return logger || (logger = new Logger(options));
+}
+exports.Logger = LoggerFactory;
 //# sourceMappingURL=index.js.map
