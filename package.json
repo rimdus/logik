@@ -7,9 +7,10 @@
     "url": "https://github.com/rimdus/logik.git"
   },
   "main": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "pbl": "npm run build && npm publish"
+    "pbl": "npm run build && npm version patch && npm publish"
   },
   "keywords": [
     "logger"
