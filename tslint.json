@@ -1,14 +1,10 @@
 {
+  "extends": "tslint-config-airbnb",
   "rules": {
-    //использовать одинарные кавычки для строковых констант
-    "quotemark": [
+    "align": [false, "arguments", "parameters"],
+    "max-line-length": [
       true,
-      "single"
-    ],
-    //обязательное использование точки с запятой (как в C# или Java)
-    "semicolon": [
-      true
+      120
     ]
-    //другие правила...
   }
 }

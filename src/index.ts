@@ -7,13 +7,13 @@ enum LoggerLevel {
   INFO = 2,
   WARN = 3,
   ERROR = 4,
-  SILENT = 5
+  SILENT = 5,
 }
 
 enum State {
   STATE_IDLE = 0,
   STATE_PROCESS = 1,
-  STATE_FAIL = 2
+  STATE_FAIL = 2,
 }
 
 let logger: Logger;
@@ -39,7 +39,7 @@ class Logger {
   constructor(options: ILoggerOptions) {
     this.options = Object.assign({
       level: LoggerLevel.INFO,
-      stdout: false
+      stdout: false,
     }, options);
     this.stack = [];
     this.level = this.options.level;
@@ -47,31 +47,31 @@ class Logger {
     this.state = State.STATE_IDLE;
 
     cluster.on('message', (worker, msg, handle) => {
-      if (msg && msg.type === 'Logger')
+      if (msg && msg.type === 'Logger') {
         this.addToStack(msg);
+      }
+
       this.init();
     });
   }
 
   write(text: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.options.stdout)
-        console.log(text);
+      if (this.options.stdout) console.log(text);
 
-      fs.appendFile(this.options.filename, text + '\n', (err) => {
-        if (err)
-          reject(err);
-        else
-          resolve();
+      fs.appendFile(this.options.filename, `text${'\n'}`, (err) => {
+        if (err) reject(err);
+        else resolve();
       });
     });
   }
 
-  buildLine(msg: string, level: string, args: any): string {
+  buildLine(msg: string, level: string, args?: any[]): string {
     // 'text{0}text{1}text{2}'
     if (args.length > 1) {
-      for (let i = 1; i <= args.length; i++) {
+      for (let i = 0; i <= args.length - 1; i++) {
         let arg;
+        let message;
 
         try {
           arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
@@ -80,11 +80,11 @@ class Logger {
           arg = '';
         }
 
-        msg = msg.replace(new RegExp(`\\{${i}\\}`, 'i'), arg);
+        message = msg.replace(new RegExp(`\\{${i}\\}`, 'i'), arg);
       }
     }
 
-    let time = new Date().toISOString();
+    const time = new Date().toISOString();
     return `${time} - ${level.toUpperCase()}: ${msg}`;
   }
 
@@ -92,18 +92,18 @@ class Logger {
     this.stack.push(item);
   }
 
-  addLog(msg: string, level: string, args?: any): void {
+  addLog(msg: string, level: string, args?: any[]): void {
     if (cluster.isMaster) {
       this.addToStack({
+        level,
         msg: this.buildLine(msg, level, args),
-        level: level
       });
       this.init();
     } else {
       process.send({
+        msg,
+        level,
         type: 'Logger',
-        msg: msg,
-        level: level
       });
     }
   }
@@ -125,62 +125,61 @@ class Logger {
   }
 
   process(): void {
-    let self = this;
-    processNext();
-
-    function processNext(): void {
-      let last = self.stack[0];
-      if (last)
-        self.write(last.msg).then(() => {
-          self.stack.shift();
+    const processNext = () => {
+      const last = this.stack[0];
+      if (last) {
+        this.write(last.msg).then(() => {
+          this.stack.shift();
           processNext(); // recursion
         }).catch((e) => {
           console.log(e);
-          self.state = State.STATE_FAIL;
+          this.state = State.STATE_FAIL;
           // delay on the error.
           setTimeout(() => {
-            self.init();
+            this.init();
           }, 2000);
         });
-      else {
+      } else {
         // stop recursion
-        self.state = State.STATE_IDLE;
+        this.state = State.STATE_IDLE;
       }
-    }
+    };
+
+    processNext();
   }
 
-  trace(msg: string): void {
+  trace(msg: string, args?: any[]): void {
     if (LoggerLevel.TRACE >= this.level) {
-      this.addLog(msg, 'TRACE', arguments);
+      this.addLog(msg, 'TRACE', args);
     }
   }
 
-  debug(msg: string): void {
+  debug(msg: string, args?: any[]): void {
     if (LoggerLevel.DEBUG >= this.level) {
-      this.addLog(msg, 'DEBUG', arguments);
+      this.addLog(msg, 'DEBUG', args);
     }
   }
 
-  info(msg: string): void {
+  info(msg: string, args?: any[]): void {
     if (LoggerLevel.INFO >= this.level) {
-      this.addLog(msg, 'INFO', arguments);
+      this.addLog(msg, 'INFO', args);
     }
   }
 
-  warn(msg: string): void {
+  warn(msg: string, args?: any[]): void {
     if (LoggerLevel.WARN >= this.level) {
-      this.addLog(msg, 'WARN', arguments);
+      this.addLog(msg, 'WARN', args);
     }
   }
 
-  error(msg: string): void {
+  error(msg: string, args?: any[]): void {
     if (LoggerLevel.ERROR >= this.level) {
-      this.addLog(msg, 'ERROR', arguments);
+      this.addLog(msg, 'ERROR', args);
     }
   }
 }
 
-function LoggerFactory(options: ILoggerOptions) {
+function loggerFactory(options: ILoggerOptions): Logger {
   return logger || (logger = new Logger(options));
 }
 
@@ -188,5 +187,5 @@ export {
   LoggerLevel,
   ILoggerOptions,
   Logger,
-  LoggerFactory as logger,
+  loggerFactory as logger,
 };
