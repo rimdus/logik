@@ -75,8 +75,7 @@ class Logger {
 
         try {
           arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
-        }
-        catch (e) {
+        } catch (e) {
           arg = '';
         }
 
@@ -150,31 +149,31 @@ class Logger {
 
   trace(msg: string, args?: any[]): void {
     if (LoggerLevel.TRACE >= this.level) {
-      this.addLog(msg, 'TRACE', args);
+      this.addLog(msg, 'TRACE', args || []);
     }
   }
 
   debug(msg: string, args?: any[]): void {
     if (LoggerLevel.DEBUG >= this.level) {
-      this.addLog(msg, 'DEBUG', args);
+      this.addLog(msg, 'DEBUG', args || []);
     }
   }
 
   info(msg: string, args?: any[]): void {
     if (LoggerLevel.INFO >= this.level) {
-      this.addLog(msg, 'INFO', args);
+      this.addLog(msg, 'INFO', args || []);
     }
   }
 
   warn(msg: string, args?: any[]): void {
     if (LoggerLevel.WARN >= this.level) {
-      this.addLog(msg, 'WARN', args);
+      this.addLog(msg, 'WARN', args || []);
     }
   }
 
   error(msg: string, args?: any[]): void {
     if (LoggerLevel.ERROR >= this.level) {
-      this.addLog(msg, 'ERROR', args);
+      this.addLog(msg, 'ERROR', args || []);
     }
   }
 }
