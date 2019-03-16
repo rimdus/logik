@@ -1,10 +1,16 @@
 {
   "name": "logik",
-  "version": "1.0.0",
+  "version": "2.1.5",
   "description": "Logger",
-  "main": "build/src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rimdus/logik.git"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "pbl": "npm run build && npm version patch && npm publish"
   },
   "keywords": [
     "logger"
@@ -12,8 +18,10 @@
   "author": "Alexey Sviridov",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^10.5.2",
-    "tslint": "^5.11.0",
-    "typescript": "^2.9.2"
+    "@types/node": "^10.12.18",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "3.2.1"
   }
 }
