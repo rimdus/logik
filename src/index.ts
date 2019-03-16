@@ -68,10 +68,10 @@ class Logger {
 
   buildLine(msg: string, level: string, args?: any[]): string {
     // 'text{0}text{1}text{2}'
+    let message = msg;
     if (args.length) {
       for (let i = 0; i <= args.length - 1; i += 1) {
         let arg;
-        let message;
 
         try {
           arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
@@ -79,12 +79,12 @@ class Logger {
           arg = 'Cant\'t parse argument';
         }
 
-        message = msg.replace(new RegExp(`\\{${i + 1}\\}`, 'i'), arg);
+        message = message.replace(new RegExp(`\\{${i + 1}\\}`, 'i'), arg);
       }
     }
 
     const time = new Date().toISOString();
-    return `${time} - ${level.toUpperCase()}: ${msg}`;
+    return `${time} - ${level.toUpperCase()}: ${message}`;
   }
 
   addToStack(item: Item): void {
