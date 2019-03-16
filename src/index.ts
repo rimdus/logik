@@ -37,10 +37,10 @@ class Logger {
   private state: number;
 
   constructor(options: ILoggerOptions) {
-    this.options = Object.assign({
+    this.options = {
       level: LoggerLevel.INFO,
-      stdout: false,
-    }, options);
+      stdout: false, ...options,
+    };
     this.stack = [];
     this.level = this.options.level;
     this.filename = this.options.filename;
@@ -68,18 +68,18 @@ class Logger {
 
   buildLine(msg: string, level: string, args?: any[]): string {
     // 'text{0}text{1}text{2}'
-    if (args.length > 1) {
-      for (let i = 0; i <= args.length - 1; i++) {
+    if (args.length) {
+      for (let i = 0; i <= args.length - 1; i += 1) {
         let arg;
         let message;
 
         try {
           arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
         } catch (e) {
-          arg = '';
+          arg = 'Cant\'t parse argument';
         }
 
-        message = msg.replace(new RegExp(`\\{${i}\\}`, 'i'), arg);
+        message = msg.replace(new RegExp(`\\{${i + 1}\\}`, 'i'), arg);
       }
     }
 
