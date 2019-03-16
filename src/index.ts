@@ -58,17 +58,17 @@ class Logger {
 
     buildLine(msg: string, level: string, args: any) {
         // 'text{0}text{1}text{2}'
-        if (args.length > 1) {
-            for (let i = 1; i <= args.length; i++) {
+        if (args.length > 0) {
+            for (let i = 0; i < args.length; i++) {
                 let arg;
 
                 try {
                     arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
                 } catch (e) {
-                    arg = '';
+                    arg = 'can\'t parse argument text';
                 }
 
-                msg = msg.replace(new RegExp(`\\{${i}\\}`, 'i'), arg);
+                msg = msg.replace(new RegExp(`\\{${i+1}\\}`, 'i'), arg);
             }
         }
 
