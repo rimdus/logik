@@ -71,12 +71,18 @@ class Logger {
     let message = msg;
     if (args.length) {
       for (let i = 0; i <= args.length - 1; i += 1) {
-        let arg;
+        let arg = args[i];
 
-        try {
-          arg = (typeof args[i] === 'object') ? JSON.stringify(args[i]) : args[i];
-        } catch (e) {
-          arg = 'Cant\'t parse argument';
+        if (typeof args[i] === 'object') {
+          let obj = args[i];
+          if (args[i] instanceof Error) {
+            obj = { message: args[i].message, name: args[i].name, stack: args[i].stack };
+          }
+          try {
+            arg = JSON.stringify(obj);
+          } catch (e) {
+            arg = 'Cant\'t parse argument';
+          }
         }
 
         message = message.replace(new RegExp(`\\{${i + 1}\\}`, 'i'), arg);
