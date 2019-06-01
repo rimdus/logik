@@ -1,6 +1,6 @@
 # LoGik
 
-NodeJS module for fast async writing text logs from all workers to the one text file.
+NodeJS module for fast async writing text logs from all workers to the one text file or stdout.
 
 ## Getting Started
 
@@ -20,9 +20,9 @@ const logik = require('logik')(options);
 ```
 #### Options
 
-* filename (string) - path to the log file
-* level (number) - logging level 
-* stdout (boolean) - default false, if true then all info duplicates to console.
+* filename (string) - not required, path to the log file
+* level (number) - not required, default ERROR, logging level 
+* stdout (boolean) - not required, default false, if true then all message are displayed on the console.
 
 
 #### Example

@@ -26,7 +26,7 @@ interface Item {
 interface ILoggerOptions {
   level?: number;
   stdout?: boolean;
-  filename: string;
+  filename?: string;
 }
 
 class Logger {
@@ -38,8 +38,9 @@ class Logger {
 
   constructor(options: ILoggerOptions) {
     this.options = {
-      level: LoggerLevel.INFO,
-      stdout: false, ...options,
+      level: LoggerLevel.ERROR,
+      stdout: false,
+      ...options,
     };
     this.stack = [];
     this.level = this.options.level;
@@ -59,10 +60,12 @@ class Logger {
     return new Promise((resolve, reject) => {
       if (this.options.stdout) console.log(text);
 
-      fs.appendFile(this.options.filename, `text${'\n'}`, (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
+      if (this.options.filename) {
+        fs.appendFile(this.options.filename, `text${'\n'}`, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }
     });
   }
 
