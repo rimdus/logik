@@ -62,9 +62,14 @@ class Logger {
 
       if (this.options.filename) {
         fs.appendFile(this.options.filename, `text${'\n'}`, (err) => {
-          if (err) reject(err);
-          else resolve();
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
         });
+      } else {
+        resolve();
       }
     });
   }
