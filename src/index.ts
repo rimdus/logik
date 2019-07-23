@@ -105,11 +105,12 @@ class Logger {
     this.stack.push(item);
   }
 
-  addLog(msg: string, level: string, args?: any[]): void {
+  addLog(msg: string, level: string, args?: any[], nativeArgs?: IArguments): void {
+    const args2 = nativeArgs.length === 2 ? args : [...nativeArgs].splice(0, 2);
     if (cluster.isMaster) {
       this.addToStack({
         level,
-        msg: this.buildLine(msg, level, args),
+        msg: this.buildLine(msg, level, args2),
       });
       this.init();
     } else {
@@ -161,33 +162,33 @@ class Logger {
     processNext();
   }
 
-  trace(msg: string, args?: any[]): void {
+  trace(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
     if (LoggerLevel.TRACE >= this.level) {
-      this.addLog(msg, 'TRACE', args || []);
+      this.addLog(msg, 'TRACE', args || [], arguments);
     }
   }
 
-  debug(msg: string, args?: any[]): void {
+  debug(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
     if (LoggerLevel.DEBUG >= this.level) {
-      this.addLog(msg, 'DEBUG', args || []);
+      this.addLog(msg, 'DEBUG', args || [], arguments);
     }
   }
 
-  info(msg: string, args?: any[]): void {
+  info(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
     if (LoggerLevel.INFO >= this.level) {
-      this.addLog(msg, 'INFO', args || []);
+      this.addLog(msg, 'INFO', args || [], arguments);
     }
   }
 
-  warn(msg: string, args?: any[]): void {
+  warn(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
     if (LoggerLevel.WARN >= this.level) {
-      this.addLog(msg, 'WARN', args || []);
+      this.addLog(msg, 'WARN', args || [], arguments);
     }
   }
 
-  error(msg: string, args?: any[]): void {
+  error(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
     if (LoggerLevel.ERROR >= this.level) {
-      this.addLog(msg, 'ERROR', args || []);
+      this.addLog(msg, 'ERROR', args || [], arguments);
     }
   }
 }
@@ -197,6 +198,7 @@ function loggerFactory(options: ILoggerOptions): Logger {
 }
 
 export {
+  Item,
   LoggerLevel,
   ILoggerOptions,
   Logger,
