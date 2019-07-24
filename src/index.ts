@@ -106,8 +106,16 @@ class Logger {
   }
 
   addLog(msg: string, level: string, args?: any[], nativeArgs?: IArguments): void {
-    const argstmp = nativeArgs.length === 2 ? args : [...nativeArgs].splice(0, 2);
+    let argstmp;
+    if (nativeArgs.length === 2) {
+      argstmp = args;
+    } else {
+      argstmp = [...nativeArgs];
+      argstmp.splice(0, 1);
+    }
+
     const args2 = Array.isArray(argstmp) ? argstmp : [argstmp];
+
     if (cluster.isMaster) {
       this.addToStack({
         level,
@@ -163,31 +171,31 @@ class Logger {
     processNext();
   }
 
-  trace(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
+  trace(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.TRACE >= this.level) {
       this.addLog(msg, 'TRACE', args || [], arguments);
     }
   }
 
-  debug(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
+  debug(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.DEBUG >= this.level) {
       this.addLog(msg, 'DEBUG', args || [], arguments);
     }
   }
 
-  info(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
+  info(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.INFO >= this.level) {
       this.addLog(msg, 'INFO', args || [], arguments);
     }
   }
 
-  warn(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
+  warn(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.WARN >= this.level) {
       this.addLog(msg, 'WARN', args || [], arguments);
     }
   }
 
-  error(msg: string, args?: any[], arg2? :any, arg3? :any, arg4? :any, arg5? :any, arg6? :any): void {
+  error(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.ERROR >= this.level) {
       this.addLog(msg, 'ERROR', args || [], arguments);
     }
