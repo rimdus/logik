@@ -97,6 +97,8 @@ class Logger {
       }
     }
 
+    // what not find set undefined
+    message = message.replace(/(\{\d+\})/gim, 'undefined');
     const time = new Date().toISOString();
     return `${time} - ${level.toUpperCase()}: ${message}`;
   }
