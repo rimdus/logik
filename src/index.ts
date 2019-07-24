@@ -106,7 +106,8 @@ class Logger {
   }
 
   addLog(msg: string, level: string, args?: any[], nativeArgs?: IArguments): void {
-    const args2 = nativeArgs.length === 2 ? args : [...nativeArgs].splice(0, 2);
+    const argstmp = nativeArgs.length === 2 ? args : [...nativeArgs].splice(0, 2);
+    const args2 = Array.isArray(argstmp) ? argstmp : [argstmp];
     if (cluster.isMaster) {
       this.addToStack({
         level,
