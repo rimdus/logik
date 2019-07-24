@@ -126,8 +126,8 @@ class Logger {
       this.init();
     } else {
       process.send({
-        msg,
         level,
+        msg: this.buildLine(msg, level, args2),
         type: 'Logger',
       });
     }
