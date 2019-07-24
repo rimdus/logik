@@ -105,7 +105,7 @@ class Logger {
     this.stack.push(item);
   }
 
-  addLog(msg: string, level: string, args?: any[], nativeArgs?: IArguments): void {
+  addLog(msg: string, level: string, args?: any, nativeArgs?: IArguments): void {
     let argstmp;
     if (nativeArgs.length === 2) {
       argstmp = args;
@@ -173,31 +173,31 @@ class Logger {
 
   trace(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.TRACE >= this.level) {
-      this.addLog(msg, 'TRACE', args || [], arguments);
+      this.addLog(msg, 'TRACE', args, arguments);
     }
   }
 
   debug(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.DEBUG >= this.level) {
-      this.addLog(msg, 'DEBUG', args || [], arguments);
+      this.addLog(msg, 'DEBUG', args, arguments);
     }
   }
 
   info(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.INFO >= this.level) {
-      this.addLog(msg, 'INFO', args || [], arguments);
+      this.addLog(msg, 'INFO', args, arguments);
     }
   }
 
   warn(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.WARN >= this.level) {
-      this.addLog(msg, 'WARN', args || [], arguments);
+      this.addLog(msg, 'WARN', args, arguments);
     }
   }
 
   error(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.ERROR >= this.level) {
-      this.addLog(msg, 'ERROR', args || [], arguments);
+      this.addLog(msg, 'ERROR', args, arguments);
     }
   }
 }
