@@ -1,6 +1,6 @@
 {
   "name": "logik",
-  "version": "2.1.18",
+  "version": "2.1.19",
   "description": "Logger",
   "repository": {
     "type": "git",
@@ -18,9 +18,9 @@
   "author": "Alexey Sviridov",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^10.12.18",
-    "tslint": "^5.12.1",
-    "tslint-config-airbnb": "^5.11.1",
-    "typescript": "3.2.1"
+    "@types/node": "^13.13.4",
+    "tslint": "^6.1.2",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "3.8.3"
   }
 }
