@@ -47,7 +47,7 @@ class Logger {
     this.filename = this.options.filename;
     this.state = State.STATE_IDLE;
 
-    cluster.on('message', (worker, msg, handle) => {
+    cluster.on('message', (worker, msg) => {
       if (msg && msg.type === 'Logger') {
         this.addToStack(msg);
       }
@@ -61,7 +61,7 @@ class Logger {
       if (this.options.stdout) console.log(text);
 
       if (this.options.filename) {
-        fs.appendFile(this.options.filename, `text${'\n'}`, (err) => {
+        fs.appendFile(this.options.filename, `${text}\n`, (err) => {
           if (err) {
             reject(err);
           } else {
@@ -98,7 +98,7 @@ class Logger {
     }
 
     // what not find set undefined
-    message = message.replace(/(\{\d+\})/gim, 'undefined');
+    message = message.replace(/({\d+})/gim, 'undefined');
     const time = new Date().toISOString();
     return `${time} - ${level.toUpperCase()}: ${message}`;
   }
