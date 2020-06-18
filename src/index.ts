@@ -33,6 +33,7 @@ class Logger {
   private options: ILoggerOptions;
   private stack: Item[];
   private level: number;
+  private stdout: boolean;
   private filename: string;
   private state: number;
 
@@ -44,6 +45,7 @@ class Logger {
     };
     this.stack = [];
     this.level = this.options.level;
+    this.stdout = this.options.stdout;
     this.filename = this.options.filename;
     this.state = State.STATE_IDLE;
 
@@ -56,9 +58,9 @@ class Logger {
     });
   }
 
-  write(text: string): Promise<any> {
+  private write(text: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.options.stdout) console.log(text);
+      if (this.stdout) console.log(text);
 
       if (this.options.filename) {
         fs.appendFile(this.options.filename, `${text}\n`, (err) => {
@@ -74,7 +76,7 @@ class Logger {
     });
   }
 
-  buildLine(msg: string, level: string, args?: any[]): string {
+  private buildLine(msg: string, level: string, args?: any[]): string {
     // 'text{0}text{1}text{2}'
     let message = msg;
     if (args.length) {
@@ -103,11 +105,11 @@ class Logger {
     return `${time} - ${level.toUpperCase()}: ${message}`;
   }
 
-  addToStack(item: Item): void {
+  private addToStack(item: Item): void {
     this.stack.push(item);
   }
 
-  addLog(msg: string, level: string, args?: any, nativeArgs?: IArguments): void {
+  private addLog(msg: string, level: string, args?: any, nativeArgs?: IArguments): void {
     let argstmp;
     if (nativeArgs.length === 2) {
       argstmp = args;
@@ -133,7 +135,7 @@ class Logger {
     }
   }
 
-  init(): void {
+  private init(): void {
     if (this.state === State.STATE_IDLE && this.stack.length) {
       this.state = State.STATE_PROCESS;
       this.process();
@@ -149,7 +151,7 @@ class Logger {
     }
   }
 
-  process(): void {
+  private process(): void {
     const processNext = () => {
       const last = this.stack[0];
       if (last) {
@@ -173,34 +175,42 @@ class Logger {
     processNext();
   }
 
-  trace(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
+  public trace(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.TRACE >= this.level) {
       this.addLog(msg, 'TRACE', args, arguments);
     }
   }
 
-  debug(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
+  public debug(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.DEBUG >= this.level) {
       this.addLog(msg, 'DEBUG', args, arguments);
     }
   }
 
-  info(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
+  public info(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.INFO >= this.level) {
       this.addLog(msg, 'INFO', args, arguments);
     }
   }
 
-  warn(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
+  public warn(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.WARN >= this.level) {
       this.addLog(msg, 'WARN', args, arguments);
     }
   }
 
-  error(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
+  public error(msg: string, args?: any[], arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any): void {
     if (LoggerLevel.ERROR >= this.level) {
       this.addLog(msg, 'ERROR', args, arguments);
     }
+  }
+
+  public setLevel(level: number): void {
+    this.level = level;
+  }
+
+  public setStdout(stdout: boolean): void {
+    this.stdout = stdout;
   }
 }
 
