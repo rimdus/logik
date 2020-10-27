@@ -58,9 +58,15 @@ class Logger {
     });
   }
 
-  private write(text: string): Promise<any> {
+  private write(text: string, level: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.stdout) console.log(text);
+      if (this.stdout) {
+        if (level === 'ERROR') {
+          console.error(text);
+        } else {
+          console.log(text);
+        }
+      }
 
       if (this.options.filename) {
         fs.appendFile(this.options.filename, `${text}\n`, (err) => {
@@ -155,7 +161,7 @@ class Logger {
     const processNext = () => {
       const last = this.stack[0];
       if (last) {
-        this.write(last.msg).then(() => {
+        this.write(last.msg, last.level).then(() => {
           this.stack.shift();
           processNext(); // recursion
         }).catch((e) => {
