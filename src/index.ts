@@ -82,7 +82,7 @@ class Logger {
     });
   }
 
-  private buildLine(msg: string, level: string, args?: any[]): string {
+  public static buildLine(msg: string, level: string, args?: any[]): string {
     // 'text{0}text{1}text{2}'
     let message = msg;
     if (args.length) {
@@ -129,13 +129,13 @@ class Logger {
     if (cluster.isMaster) {
       this.addToStack({
         level,
-        msg: this.buildLine(msg, level, args2),
+        msg: Logger.buildLine(msg, level, args2),
       });
       this.init();
     } else {
       process.send({
         level,
-        msg: this.buildLine(msg, level, args2),
+        msg: Logger.buildLine(msg, level, args2),
         type: 'Logger',
       });
     }
